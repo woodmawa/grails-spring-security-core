@@ -96,7 +96,10 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		if (useGroups) {
 			if (authorityGroupPropertyName) {
-				authorities = userAuthorities.collect { it."$authorityGroupPropertyName" }.flatten().unique().collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
+				//authorities = userAuthorities.collect { it."$authorityGroupPropertyName" }.flatten().unique().collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
+				//ww edit to stop gpf..  userAuthorties is Set<Role>, so first collect gets the names and produces ArrayList of stirng
+				//second collect builds the authorities as Set<SimpleGrantedAuthority>
+				authorities = userAuthorities.collect { it."$authorityGroupPropertyName" }.flatten().unique().collect { new SimpleGrantedAuthority(it) }
 			}
 			else {
 				log.warn 'Attempted to use group authorities, but the authority name field for the group class has not been defined.'
